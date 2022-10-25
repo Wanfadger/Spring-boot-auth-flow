@@ -1,16 +1,12 @@
 package com.wanfadger.springbootsecuritydemo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "\"User\"")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +14,18 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private boolean enabled;
+
+    @PostPersist
+    private void onPostPersist(){
+        this.enabled = false;
+    }
+
 }
